@@ -322,11 +322,11 @@ read_arena = function(filename, description = NULL){
 		# The 'vicinity' buffer is added because animals do not _enter_ the holes, but rather investigate from the edge and centre-of-mass tracking will place them outside the actual target.
 		if(!is.null(description$goal)){
 			arena$zones$goal = terra::vect(circle(goal$x, goal$y, goal$radius), type = "polygons", crs = "local")
-			arena$zones$goal.vicinity = terra::buffer(arena$zones$goal, 0.05, quadsegs = 90)
+			arena$zones$goal.vicinity = terra::buffer(arena$zones$goal, 0.0, quadsegs = 90)
 		}
 		if(!is.null(description$old.goal)){
 			arena$zones$old.goal = terra::vect(circle(old.goal$x, old.goal$y, old.goal$radius), type = "polygons", crs = "local")
-			arena$zones$old.goal.vicinity = terra::buffer(arena$zones$old.goal, 0.05, quadsegs = 90)
+			arena$zones$old.goal.vicinity = terra::buffer(arena$zones$old.goal, 0.0, quadsegs = 90)
 		}
 		# Add individual holes (for counting unique visits) and then combine with the arena.
 		holes = setNames(lapply(seq_len(n.holes), function(n){
@@ -334,10 +334,10 @@ read_arena = function(filename, description = NULL){
 		}), paste0("hole_", seq_len(n.holes)))
 		# Add separate vicinities.
 		hole.vicinities = setNames(lapply(seq_len(n.holes), function(n){
-			terra::buffer(holes[[n]], 0.05, quadsegs = 90)
+			terra::buffer(holes[[n]], 0.0, quadsegs = 90)
 		}), paste0("hole_", seq_len(n.holes), "_vicinity"))
 		arena$zones = c(arena$zones, holes, hole.vicinities)
-		arena$zones$hole.vicinity = terra::buffer(Reduce(terra::union, holes), 0.05, quadsegs = 90)
+		arena$zones$hole.vicinity = terra::buffer(Reduce(terra::union, holes), 0.0, quadsegs = 90)
 		# Add special zones for goal-adjacent holes.
 		if(!is.null(description$goal)){
 			adjacency.to.goal = order(sqrt((hole.centre.x - goal$x) ^ 2 + (hole.centre.y - goal$y) ^ 2), decreasing = FALSE)
